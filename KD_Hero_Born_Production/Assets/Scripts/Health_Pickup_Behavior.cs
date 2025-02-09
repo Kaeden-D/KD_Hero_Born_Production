@@ -24,6 +24,9 @@ public class Health_Pickup_Behavior : MonoBehaviour
 
             Debug.Log("Health Increased.");
 
+            PlayerBehavior Player = collision.gameObject.GetComponent<PlayerBehavior>();
+            Player.HealthChange(1);
+
         }
 
     }

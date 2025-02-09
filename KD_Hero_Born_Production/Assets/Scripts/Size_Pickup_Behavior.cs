@@ -22,7 +22,12 @@ public class Size_Pickup_Behavior : MonoBehaviour
         if (collision.gameObject.name == "Player")
         {
 
-            Debug.Log("Size Changed.");
+            float change = Random.Range(75, 125) / 100f;
+
+            Debug.Log("Size Changed to " + change);
+
+            PlayerBehavior Player = collision.gameObject.GetComponent<PlayerBehavior>();
+            Player.SizeChange(change, collision);
 
         }
 
