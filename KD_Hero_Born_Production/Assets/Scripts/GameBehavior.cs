@@ -6,24 +6,25 @@ using UnityEngine.SceneManagement;
 public class GameBehavior : MonoBehaviour
 {
 
-    public bool showWinScreen = false;
     public string labelText = "Collect all 4 items and win your freedom!";
     public int maxItems = 4;
+    public bool showWinScreen = false;
+    public bool showLossScreen = false;
 
-    private int _itemsCollected = 0;
+    private int ItemsCollected = 0;
 
     public int Items
     {
 
-        get { return _itemsCollected; }
+        get { return ItemsCollected; }
 
         set
         {
 
-            _itemsCollected = value;
-            Debug.LogFormat("Items: {0}", _itemsCollected);
+            ItemsCollected = value;
+            Debug.LogFormat("Items: {0}", ItemsCollected);
 
-            if (_itemsCollected >= maxItems)
+            if (ItemsCollected >= maxItems)
             {
 
                 labelText = "You've found all the items!";
@@ -34,7 +35,7 @@ public class GameBehavior : MonoBehaviour
             else
             {
 
-                labelText = "Item found, only " + (maxItems - _itemsCollected) + " more to go!";
+                labelText = "Item found, only " + (maxItems - ItemsCollected) + " more to go!";
 
             }
 
@@ -42,46 +43,86 @@ public class GameBehavior : MonoBehaviour
 
     }
 
-    private int _playerHP = 10;
+    private float PlayerSize = 1f;
 
-    public int HP
+    public float Size
     {
 
-        get { return _playerHP; }
+        get { return PlayerSize; }
 
         set
         {
 
-            _playerHP = value;
-            Debug.LogFormat("Lives: {0}", _playerHP);
+            PlayerSize = value;
+            Debug.LogFormat("Size: {0}", PlayerSize);
 
         }
 
     }
 
-    private float _playerSize = 1f;
+    private int BulletDamage = 1;
 
-    public float Size
+    public int Damage
     {
 
-        get { return _playerSize; }
+        get { return BulletDamage; }
 
         set
         {
 
-            _playerSize = value;
-            Debug.LogFormat("Size: {0}", _playerSize);
+            BulletDamage = value;
+            Debug.LogFormat("Damage: {0}", BulletDamage);
 
         }
+
+    }
+
+    private int PlayerHP = 10;
+
+    public int HP
+    {
+
+        get { return PlayerHP; }
+
+        set
+        {
+
+            PlayerHP = value;
+            Debug.LogFormat("Lives: {0}", PlayerHP);
+
+            if (PlayerHP <= 0)
+            {
+
+                labelText = "You want another life with that?";
+                showLossScreen = true;
+                Time.timeScale = 0;
+
+            }
+            else
+            {
+
+                labelText = "Ouch... that's got hurt.";
+
+            }
+
+        }
+
+    }
+
+    void RestartLevel()
+    {
+
+        SceneManager.LoadScene(0);
+        Time.timeScale = 1.0f;
 
     }
 
     void OnGUI()
     {
 
-        GUI.Box(new Rect(20, 20, 150, 25), "Player Health:" + _playerHP);
-        GUI.Box(new Rect(20, 50, 150, 25), "Player Size: " + _playerSize);
-        GUI.Box(new Rect(20, 80, 150, 25), "Items Collected: " + _itemsCollected);
+        GUI.Box(new Rect(20, 20, 150, 25), "Player Health:" + PlayerHP);
+        GUI.Box(new Rect(20, 50, 150, 25), "Player Size: " + PlayerSize);
+        GUI.Box(new Rect(20, 80, 150, 25), "Items Collected: " + ItemsCollected);
         GUI.Label(new Rect(Screen.width / 2 - 100, Screen.height - 50, 300, 50), labelText);
 
         if (showWinScreen)
@@ -90,9 +131,19 @@ public class GameBehavior : MonoBehaviour
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "YOU WON!"))
             {
 
-                SceneManager.LoadScene(0);
+                RestartLevel();
 
-                Time.timeScale = 1.0f;
+            }
+
+        }
+
+        if (showLossScreen)
+        {
+
+            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "You lose..."))
+            {
+
+                RestartLevel();
 
             }
 

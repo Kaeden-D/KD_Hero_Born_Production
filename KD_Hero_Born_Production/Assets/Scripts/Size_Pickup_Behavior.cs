@@ -27,7 +27,7 @@ public class Size_Pickup_Behavior : MonoBehaviour
             Debug.Log("Size Changed to " + change);
 
             PlayerBehavior Player = collision.gameObject.GetComponent<PlayerBehavior>();
-            Player.SizeChange(change, collision);
+            Player.SizeChange(change);
 
         }
 

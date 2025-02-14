@@ -109,6 +109,33 @@ public class PlayerBehavior : MonoBehaviour
 
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.name == "Enemy")
+        {
+
+            HealthChange(-1);
+
+        }
+
+    }
+
+    public void SizeChange(float value)
+    {
+
+        this.gameObject.transform.localScale = new Vector3(value, value, value);
+        gameBehavior.Size = value;
+
+    }
+
+    public void DamageChange(int value)
+    {
+
+        gameBehavior.Damage += value;
+
+    }
+
     public void HealthChange(int value)
     {
 
@@ -116,12 +143,6 @@ public class PlayerBehavior : MonoBehaviour
 
     }
 
-    public void SizeChange(float value, Collision collision)
-    {
-
-        collision.gameObject.transform.localScale = new Vector3(value, value, value);
-        gameBehavior.Size = value;
-
-    }
+    
 
 }

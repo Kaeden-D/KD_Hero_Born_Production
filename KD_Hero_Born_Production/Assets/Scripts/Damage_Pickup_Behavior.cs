@@ -24,6 +24,9 @@ public class Damage_Pickup_Behavior : MonoBehaviour
 
             Debug.Log("Damage Increased.");
 
+            PlayerBehavior Player = collision.gameObject.GetComponent<PlayerBehavior>();
+            Player.DamageChange(1);
+
         }
 
     }
