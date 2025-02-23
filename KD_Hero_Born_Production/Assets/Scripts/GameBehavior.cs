@@ -2,14 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using CustomExtensionsBehavior;
 
-public class GameBehavior : MonoBehaviour
+public class GameBehavior : MonoBehaviour, IManagerBehavior
 {
 
     public string labelText = "Collect all 4 items and win your freedom!";
     public int maxItems = 4;
     public bool showWinScreen = false;
     public bool showLossScreen = false;
+
+    private string state;
+
+    public string State
+    {
+
+        get { return state; }
+
+        set { state = value; }
+
+    }
 
     private int ItemsCollected = 0;
 
@@ -109,6 +121,23 @@ public class GameBehavior : MonoBehaviour
 
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+
+        Initialize();
+
+    }
+
+    public void Initialize()
+    {
+
+        state = "Manager initialized..";
+        state.FancyDebug();
+        Debug.Log(state);
+
+    }
+
     void RestartLevel()
     {
 
@@ -149,12 +178,6 @@ public class GameBehavior : MonoBehaviour
 
         }
 
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame

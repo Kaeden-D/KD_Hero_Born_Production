@@ -123,7 +123,7 @@ public class EnemyBehavior : MonoBehaviour
 
             LivesChange(-gameBehavior.Damage);
 
-            Debug.Log("Critical hit!");
+            Debug.Log("Damage: " + gameBehavior.Damage +  "\nCritical hit!");
 
         }
 
