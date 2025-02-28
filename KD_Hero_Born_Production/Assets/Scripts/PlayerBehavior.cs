@@ -19,6 +19,9 @@ public class PlayerBehavior : MonoBehaviour
     private bool jumpActive = false;
     private bool bulletActive = false;
 
+    public delegate void JumpingEvent();
+    public event JumpingEvent playerJump;
+
     private GameBehavior gameBehavior;
     private float vInput;
     private float hInput;
@@ -84,6 +87,7 @@ public class PlayerBehavior : MonoBehaviour
 
             _rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
             jumpActive = false;
+            playerJump();
 
         }
 

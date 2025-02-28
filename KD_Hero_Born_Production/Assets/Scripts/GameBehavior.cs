@@ -12,6 +12,10 @@ public class GameBehavior : MonoBehaviour, IManagerBehavior
     public bool showWinScreen = false;
     public bool showLossScreen = false;
 
+    public Stack<string> lootStack = new Stack<string>();
+    public delegate void DebugDelegate(string newText);
+    public DebugDelegate debug = Print;
+
     private string state;
 
     public string State
@@ -126,6 +130,10 @@ public class GameBehavior : MonoBehaviour, IManagerBehavior
     {
 
         Initialize();
+        InventoryList<string> inventoryList = new InventoryList<string>();
+
+        inventoryList.SetItem("Potion");
+        Debug.Log(inventoryList.item);
 
     }
 
@@ -136,13 +144,37 @@ public class GameBehavior : MonoBehaviour, IManagerBehavior
         state.FancyDebug();
         Debug.Log(state);
 
+        debug(state);
+        LogWithDelegate(debug);
+
+        GameObject player = GameObject.Find("Player");
+        PlayerBehavior playerBehavior = player.GetComponent<PlayerBehavior>();
+        playerBehavior.playerJump += HandlePlayerJump;
+
+        lootStack.Push("Sword of Doom");
+        lootStack.Push("HP+");
+        lootStack.Push("Golden Key");
+        lootStack.Push("Winged Boot");
+        lootStack.Push("Mythril Bracers");
+
     }
 
-    void RestartLevel()
+    public void HandlePlayerJump()
+    {
+        debug("Player has jumped...");
+    }
+
+    public static void Print(string newText)
     {
 
-        SceneManager.LoadScene(0);
-        Time.timeScale = 1.0f;
+        Debug.Log(newText);
+
+    }
+
+    public void LogWithDelegate(DebugDelegate del)
+    {
+
+        del("Delegating the debug task...");
 
     }
 
@@ -160,7 +192,7 @@ public class GameBehavior : MonoBehaviour, IManagerBehavior
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "YOU WON!"))
             {
 
-                RestartLevel();
+                Utilities.RestartLevel(0);
 
             }
 
@@ -172,11 +204,41 @@ public class GameBehavior : MonoBehaviour, IManagerBehavior
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "You lose..."))
             {
 
-                RestartLevel();
+                try
+                {
+
+                    Utilities.RestartLevel(-1);
+                    debug("Level restarted successfully...");
+
+                }
+                catch (System.ArgumentException e)
+                {
+
+                    Utilities.RestartLevel(0);
+                    debug("Reverting to scene 0: " + e.ToString());
+
+                }
+                finally
+                {
+
+                    debug("Restart handled...");
+
+                }
 
             }
 
         }
+
+    }
+
+    public void PrintLootReport()
+    {
+
+        var currentItem = lootStack.Pop();
+        var nextItem = lootStack.Peek();
+
+        Debug.LogFormat("You got a {0}! You've got a good chance of finding a { 1} next!", currentItem, nextItem);
+        Debug.LogFormat("There are {0} random loot items waiting for you!", lootStack.Count);
 
     }
 
